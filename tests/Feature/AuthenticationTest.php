@@ -12,8 +12,9 @@ class AuthenticationTest extends TestCase
 
     public function test_guest_can_open_login_and_register_pages(): void
     {
-        $this->get(route('login'))->assertOk();
+        $this->get(route('login'))->assertOk()->assertSee('Masuk ke akunmu')->assertSee('href="'.route('register').'"', false)->assertDontSee('Masuk Pengelola');
         $this->get(route('register'))->assertOk();
+        $this->get(route('home'))->assertOk()->assertSee('href="'.route('login').'" aria-label="Masuk ke akun"', false)->assertDontSee('href="'.route('register').'"', false);
     }
 
     public function test_user_can_register_and_is_redirected_to_dashboard(): void
@@ -27,7 +28,7 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticated();
-        $this->assertDatabaseHas('users', ['email' => 'budi@example.com']);
+        $this->assertDatabaseHas('users', ['email' => 'budi@example.com', 'role' => 'customer']);
     }
 
     public function test_user_can_login_and_logout(): void
@@ -55,6 +56,23 @@ class AuthenticationTest extends TestCase
         ])->assertRedirect(route('login'))->assertSessionHasErrors('email');
 
         $this->assertGuest();
+    }
+
+    public function test_admin_cannot_use_customer_login_or_dashboard(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => 'password123',
+        ]);
+
+        $this->from(route('login'))->post(route('login.store'), [
+            'email' => $admin->email,
+            'password' => 'password123',
+        ])->assertRedirect(route('login'))->assertSessionHasErrors('email');
+
+        $this->assertGuest();
+        $this->actingAs($admin)->get(route('dashboard'))->assertRedirect(route('admin.dashboard'));
+        $this->get(route('home'))->assertSee('href="'.route('admin.dashboard').'" aria-label="Buka akun', false);
     }
 
     public function test_guest_cannot_open_dashboard(): void

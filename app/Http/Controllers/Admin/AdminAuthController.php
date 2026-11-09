@@ -26,7 +26,7 @@ class AdminAuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt([...$credentials, 'role' => 'admin'], $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'Email atau kata sandi salah. Silakan periksa kembali.',
             ])->onlyInput('email');

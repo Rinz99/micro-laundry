@@ -16,21 +16,11 @@
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation"><span></span><span></span><span></span><span class="sr-only">Buka menu</span></button>
             <nav class="main-nav" id="main-navigation" aria-label="Navigasi utama">
                 <a href="#layanan">Layanan</a><a href="#cara-kerja">Cara Kerja</a><a href="#lokasi">Lokasi</a><a href="#cek-pesanan">Cek Pesanan</a>
-                <span class="mobile-account-links">
-                    @auth
-                        <a href="{{ route('dashboard') }}">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}">Masuk</a>
-                        <a href="{{ route('register') }}">Daftar</a>
-                    @endauth
-                </span>
             </nav>
             <div class="header-actions">
                 @auth
-                    <a class="button button-pill" href="{{ route('dashboard') }}">Dashboard</a>
-                    <a class="profile-button" href="{{ route('dashboard') }}" aria-label="Buka akun {{ auth()->user()->name }}"><img src="{{ asset('images/landing/asset-user.svg') }}" alt=""></a>
+                    <a class="profile-button" href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" aria-label="Buka akun {{ auth()->user()->name }}"><img src="{{ asset('images/landing/asset-user.svg') }}" alt=""></a>
                 @else
-                    <a class="button button-pill" href="{{ route('register') }}">Daftar</a>
                     <a class="profile-button" href="{{ route('login') }}" aria-label="Masuk ke akun"><img src="{{ asset('images/landing/asset-user.svg') }}" alt=""></a>
                 @endauth
             </div>

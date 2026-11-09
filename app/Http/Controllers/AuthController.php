@@ -28,17 +28,13 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt([...$credentials, 'role' => 'customer'], $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'Email atau kata sandi tidak sesuai.',
             ])->onlyInput('email');
         }
 
         $request->session()->regenerate();
-
-        if (Auth::user()->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard'));
-        }
 
         return redirect()->intended(route('dashboard'));
     }

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (\Illuminate\Http\Request $request) => $request->is('admin*') ? route('admin.login') : route('login'));
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'customer' => \App\Http\Middleware\EnsureUserIsCustomer::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

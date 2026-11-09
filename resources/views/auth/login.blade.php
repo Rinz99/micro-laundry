@@ -26,7 +26,7 @@
             <button class="primary-button" type="submit">Masuk</button>
         </form>
 
-        <p class="auth-switch">Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a></p>
+        <p class="auth-switch">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
     </section>
 
     <script>document.querySelector('[data-password-toggle]').addEventListener('click',function(){const input=document.getElementById(this.dataset.passwordToggle);const show=input.type==='password';input.type=show?'text':'password';this.textContent=show?'Sembunyikan':'Lihat'});</script>
